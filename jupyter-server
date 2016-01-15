@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+source activate dato-env
+
+nohup jupyter notebook > ~/.jupyter//jupyter.log 2>&1 &
+echo $! > ~/.jupyter/jupyter.pid
+
