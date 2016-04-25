@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 #
 #
 # chkconfig: 2345 90 60
@@ -48,8 +48,8 @@ stop() {
         exit 4
     fi
     echo -n $"Stopping $prog: "
-	if [ -n "`pidfileofproc $exec`" ]; then
-		killproc $exec
+	if [ -n "`pidofproc -p $pidfile $prog`" ]; then
+		killproc -p $pidfile $prog
 		RETVAL=3
 	else
 		failure $"Stopping $prog"

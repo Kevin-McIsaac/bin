@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case "$1" in
+    save)
+	echo "Saving work to S3"
+        aws s3 sync ~/Notebooks/ s3://kmc-data-science 
+	;;
+    restore)
+	echo "Restoring work from S3"
+	aws s3 sync s3://kmc-data-science ~/Notebooks/ 
+	;;
+    *)
+	echo $"Usage: $0 {save|restore}"
+	exit 2
+esac

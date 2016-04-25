@@ -1,17 +1,17 @@
-#!/bin/sh 
+#!/bin/sh
 
 # Make sure only root can run our script                
 if [ "$(id -u)" != "0" ]; then
     echo "This script must be run as root" 1>&2
     exit 1
 fi
-PATH=$PATH:/opt/aws/bin
+PATH=$PATH:/opt/aws/bin:/usr/local/bin
 # Load configuration
 . /etc/route53/config
 
 # Export access key ID and secret for cli53
-export AWS_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY
+export aws_access_key_id
+export aws_secret_access_key
 
 # Use command line scripts to get instance ID and public hostname
 #INSTANCE_ID=$(ec2-metadata | grep 'instance-id:' | cut -d ' ' -f 2)
@@ -20,5 +20,6 @@ PUBLIC_HOSTNAME+="."
 HOST_NAME=`hostname -s`
 
 # Create a new CNAME record on Route 53, replacing the old entry if nessesary
-#echo cli53 rrcreate --replace "$ZONE" "$HOST_NAME 60 CNAME $PUBLIC_HOSTNAME" 
-cli53 rrcreate --replace "$ZONE" "$HOST_NAME 60 CNAME $PUBLIC_HOSTNAME" 
+cli53 rrcreate --replace "$ZONE" "$HOST_NAME 300 CNAME $PUBLIC_HOSTNAME" 
+logger "ROUTE53: Setting DNS CNAME $MY_NAME.$ZONE to $PUBLIC_HOSTNAME"
+

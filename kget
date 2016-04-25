@@ -1,0 +1,4 @@
+#!/bin/bash
+#use cookies toget data from Kaggel site
+
+wget --load-cookies cookies.txt $*
