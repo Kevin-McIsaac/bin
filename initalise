@@ -1,0 +1,19 @@
+#!/bin/bash
+# Set up the workbench server
+#
+
+# Attached and mount the home volume over /home
+aws ec2 attach-volume --volume-id vol-40f55287  --device /dev/sdf --instance-id `ec2-metadata -i | cut -d' '  -f 2`  
+sleep 2
+sudo mount /dev/xvdf1 /home
+
+# Setup and run jupyter notebook server
+cd ~ec2-user/bin
+sudo cp jupyter.init.d /etc/init.d/jupyter
+sudo service jupyter start
+
+# Upate DNS to point workbench URL to this server
+./update-route53-dns
+
+suo yum update -y
+suo yum install git -y
