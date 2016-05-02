@@ -1,25 +1,20 @@
-#!/bin/sh
+#!/bin/sh 
 
-# Make sure only root can run our script                
-if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root" 1>&2
-    exit 1
-fi
-PATH=$PATH:/opt/aws/bin:/usr/local/bin
-# Load configuration
-. /etc/route53/config
+PATH=$PATH:/opt/aws/bin
 
 # Export access key ID and secret for cli53
-export aws_access_key_id
-export aws_secret_access_key
+#export aws_access_key_id="AKIAIVLXXUIOZUTWM7FQ"
+#export aws_secret_access_key="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"
+export ZONE="datascienceinstitute.com.au"
+export TTL="600"
 
 # Use command line scripts to get instance ID and public hostname
 #INSTANCE_ID=$(ec2-metadata | grep 'instance-id:' | cut -d ' ' -f 2)
 PUBLIC_HOSTNAME=$(ec2-metadata | grep 'public-hostname:' | cut -d ' ' -f 2)
 PUBLIC_HOSTNAME+="."
-HOST_NAME=`hostname -s`
+HOST_NAME=jupyter1
 
 # Create a new CNAME record on Route 53, replacing the old entry if nessesary
-cli53 rrcreate --replace "$ZONE" "$HOST_NAME 300 CNAME $PUBLIC_HOSTNAME" 
+/home/ec2-user/bin/cli53 rrcreate --replace "$ZONE" "$HOST_NAME 300 CNAME $PUBLIC_HOSTNAME" 
 logger "ROUTE53: Setting DNS CNAME $MY_NAME.$ZONE to $PUBLIC_HOSTNAME"
 
