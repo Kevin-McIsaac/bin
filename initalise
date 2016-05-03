@@ -4,7 +4,11 @@
 
 # Attached and mount the home volume over /home
 aws ec2 attach-volume --volume-id vol-40f55287  --device /dev/sdf --instance-id `ec2-metadata -i | cut -d' '  -f 2`  
-sleep 2
+
+until ( lsblk | grep -q xvdf1 ) ; do   
+   sleep 2; echo waiting on device /dev/sdf
+ done
+
 sudo mount /dev/xvdf1 /home
 
 # Setup and run jupyter notebook server
@@ -15,5 +19,5 @@ sudo service jupyter start
 # Upate DNS to point workbench URL to this server
 ./update-route53-dns
 
-suo yum update -y
-suo yum install git -y
+sudo yum update -y
+sudo yum install git -y
