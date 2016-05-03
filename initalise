@@ -3,7 +3,7 @@
 #
 
 # Attached and mount the home volume over /home
-aws ec2 attach-volume --volume-id vol-40f55287  --device /dev/sdf --instance-id `ec2-metadata -i | cut -d' '  -f 2`  
+aws ec2 attach-volume --volume-id $1  --device /dev/sdf --instance-id `ec2-metadata -i | cut -d' '  -f 2`  
 
 until ( lsblk | grep -q xvdf1 ) ; do   
    sleep 2; echo waiting on device /dev/sdf
