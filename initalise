@@ -20,4 +20,4 @@ sudo service jupyter start
 ./update-route53-dns
 
 sudo yum update -y
-sudo yum install git -y
+sudo yum install git iotop -y
