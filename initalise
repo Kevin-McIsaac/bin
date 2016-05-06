@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set up the workbench server
-#
+# Note - must be run a root, which is the case when run using user-data/cloud init
 
 PATH=$PATH:/opt/aws/bin/
 # Attached and mount the home volume over /home
@@ -10,15 +10,19 @@ until ( lsblk | grep -q xvdf1 ) ; do
    sleep 2; echo waiting on device /dev/sdf
  done
 
-sudo mount /dev/xvdf1 /home
+mount /dev/xvdf1 /home
+
+#setup sydney timezone
+rm /etc/localtime
+ln -s /usr/share/zoneinfo/Australia/Sydney /etc/localtime
 
 # Setup and run jupyter notebook server
 cd ~ec2-user/bin
-sudo cp jupyter.init.d /etc/init.d/jupyter
-sudo service jupyter start
+cp jupyter.init.d /etc/init.d/jupyter
+service jupyter start
 
 # Upate DNS to point workbench URL to this server
 ./update-route53-dns
 
-sudo yum update -y
-sudo yum install git iotop -y
+yum update -y
+yum install git iotop -y
