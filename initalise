@@ -2,18 +2,18 @@
 # Set up the workbench server
 # Note - must be run a root, which is the case when run using user-data/cloud init
 
-PATH=$PATH:/opt/aws/bin/
-# Attached and mount the home volume over /home
-aws ec2 attach-volume --volume-id $1  --device /dev/sdf --instance-id `ec2-metadata -i | cut -d' '  -f 2`  
+# Mount EFS over /home. This holds all my workbooks
+mount -t nfs4 -o nfsvers=4.1 us-west-2a.fs-fa54a053.efs.us-west-2.amazonaws.com:/ /home
 
-until ( lsblk | grep -q xvdf1 ) ; do   
-   sleep 2; echo waiting on device /dev/sdf
- done
+# update my tools directories
+cd ~/bin
+git pull
 
-mount /dev/xvdf1 /home
+cd ~/IPython-notebook-extensions/
+git pull
 
 #setup sydney timezone
-rm /etc/localtime
+rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/Australia/Sydney /etc/localtime
 
 # Setup and run jupyter notebook server
@@ -26,3 +26,5 @@ service jupyter start
 
 yum update -y
 yum install git iotop -y
+
+echo Done
