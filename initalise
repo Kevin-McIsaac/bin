@@ -3,14 +3,7 @@
 # Note - must be run a root, which is the case when run using user-data/cloud init
 
 # Mount EFS over /home. This holds all my workbooks
-mount -t nfs4 -o nfsvers=4.1 $1 /home
-
-# update my tools directories
-cd ~/bin
-git pull
-
-cd ~/IPython-notebook-extensions/
-git pull
+mount -t nfs4 -o nfsvers=4.1 $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone).fs-fa54a053.efs.us-west-2.amazonaws.com:/ /home
 
 #setup sydney timezone
 rm -f /etc/localtime
