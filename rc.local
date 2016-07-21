@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh +x
 #
 # This script will be executed *after* all the other init scripts.
 # You can put your own initialization stuff in here if you don't
@@ -6,8 +6,7 @@
 
 touch /var/lock/subsys/local
 
-# Change DNS to point to this host.
-/home/ec2-user/bin/update-route53-dns
-
-yum update -y
-
+cd /tmp
+wget https://raw.githubusercontent.com/Kevin-McIsaac/bin/master/initalise
+chmod +x initalise
+./initalise
